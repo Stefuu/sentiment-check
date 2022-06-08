@@ -34,11 +34,70 @@ class ScorePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          textAlign: TextAlign.center,
+                          '* Scores are calculated by getting the sum of all positive words ranking minus the sum of all negative words ranking',
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        if (int.parse(urlScore) > 0 &&
+                            int.parse(urlScore) != -100)
+                          Text(
+                            '😊',
+                            style: const TextStyle(
+                              fontSize: 100,
+                            ),
+                          ),
+                        if (int.parse(urlScore) < 0 &&
+                            int.parse(urlScore) != -100)
+                          Text(
+                            '😟',
+                            style: const TextStyle(
+                              fontSize: 100,
+                            ),
+                          ),
+                        if (int.parse(urlScore) == 0)
+                          Text(
+                            '😐',
+                            style: const TextStyle(
+                              fontSize: 100,
+                            ),
+                          ),
                         if (int.parse(urlScore) != -100)
                           Text(
                             'Score from URL: $urlScore',
                             style: const TextStyle(
                               fontSize: 40,
+                            ),
+                          ),
+                        if (int.parse(textScore) > 0 &&
+                            int.parse(textScore) != -100)
+                          Text(
+                            '😊',
+                            style: const TextStyle(
+                              fontSize: 100,
+                            ),
+                          ),
+                        if (int.parse(textScore) < 0 &&
+                            int.parse(textScore) != -100)
+                          Text(
+                            '😟',
+                            style: const TextStyle(
+                              fontSize: 100,
+                            ),
+                          ),
+                        if (int.parse(textScore) == 0)
+                          Text(
+                            '😐',
+                            style: const TextStyle(
+                              fontSize: 100,
                             ),
                           ),
                         if (int.parse(textScore) != -100)
@@ -48,6 +107,9 @@ class ScorePage extends StatelessWidget {
                               fontSize: 40,
                             ),
                           ),
+                        SizedBox(
+                          height: 50,
+                        ),
                         ElevatedButton(
                           onPressed: () {
                             context.go('/');
@@ -62,6 +124,9 @@ class ScorePage extends StatelessWidget {
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 200,
                         )
                       ],
                     ),
