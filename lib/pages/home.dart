@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.all(20.0),
                         child: !loading
                             ? const Text(
-                                'CHECK SENTIMENT',
+                                'CHECK SENTIMENT!',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 28,
