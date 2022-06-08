@@ -29,13 +29,15 @@ class App extends StatelessWidget {
       ),
       GoRoute(
         path: '/score',
-        builder: (
-          BuildContext context,
-          GoRouterState state,
-        ) =>
-            const ScorePage(
-          appTitle: title,
-        ),
+        builder: (context, state) {
+          final urlScore = state.queryParams['urlScore'];
+          final textScore = state.queryParams['textScore'];
+          return ScorePage(
+            appTitle: title,
+            urlScore: urlScore,
+            textScore: textScore,
+          );
+        },
       ),
     ],
   );

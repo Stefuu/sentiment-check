@@ -6,16 +6,26 @@ import 'package:go_router/go_router.dart';
 import 'package:web_scraper/web_scraper.dart';
 import 'package:http/http.dart' as http;
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.appTitle}) : super(key: key);
   final String appTitle;
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final TextEditingController _textController = TextEditingController();
+
   final TextEditingController _urlController = TextEditingController();
+
   final sentiment = Sentiment();
+
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Center(child: Text(appTitle))),
+        appBar: AppBar(title: Center(child: Text(widget.appTitle))),
         body: Container(
           color: const Color.fromARGB(255, 234, 234, 234),
           child: Center(
@@ -100,31 +110,48 @@ class HomePage extends StatelessWidget {
                     const SizedBox(height: 40),
                     ElevatedButton(
                       onPressed: () async {
-                        final uri = Uri.parse('https://www.uol.com.br');
-                        final response = await http.get(uri);
-                        print('Response body: ${response.body}');
-                        // if (_textController.text.isNotEmpty) {
-                        //   print(sentiment.analysis(_textController.text));
-                        // }
+                        int textScore = -100;
+                        int urlScore = -100;
+                        if (_textController.text.isNotEmpty) {
+                          textScore =
+                              sentiment.analysis(_textController.text)['score'];
+                        }
 
-                        // final webScraper = WebScraper('https://www.uol.com.br');
-                        // if (await webScraper.loadWebPage('/')) {
-                        //   List<Map<String, dynamic>> elements = webScraper
-                        //       .getElement('h3.title > a.caption', ['href']);
-                        //   print(elements);
-                        // }
-                        //context.go('/score');
+                        if (_urlController.text.isNotEmpty) {
+                          final String encoded =
+                              Uri.encodeComponent(_urlController.text);
+                          final uri = Uri.parse(
+                              'https://dart-scraper.herokuapp.com/scrape/$encoded');
+                          setState(() {
+                            loading = true;
+                          });
+                          final response = await http.get(uri);
+
+                          urlScore = sentiment.analysis(response.body)['score'];
+
+                          setState(() {
+                            loading = false;
+                          });
+                        }
+
+                        if (textScore != -100 || urlScore != -100) {
+                          context.go(
+                            '/score?textScore=$textScore&urlScore=$urlScore',
+                          );
+                        }
                       },
-                      child: const Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          'CHECK SENTIMENT',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'Papirus',
-                            fontSize: 28,
-                          ),
-                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: !loading
+                            ? const Text(
+                                'CHECK SENTIMENT',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 28,
+                                ),
+                              )
+                            : const CircularProgressIndicator(
+                                color: Colors.greenAccent),
                       ),
                     ),
                     const SizedBox(height: 40),
